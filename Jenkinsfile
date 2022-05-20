@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Building Docker Image') {
             steps {
-                sh 'docker build -t sainathgaripally/project1 .'
+                sh 'docker version'
             }
         }
     }
