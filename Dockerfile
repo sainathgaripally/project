@@ -1,14 +1,12 @@
-FROM maven:3.6.1-jdk-8 as maven_builder
+FROM maven:3-adoptopenjdk-8 as maven_builder
 
-ENV appdata /opt/javaapp/
+WORKDIR /app
 
-RUN mkdir -p "$appdata"
+COPY . .
 
-WORKDIR $appdata
+RUN mvn clean package
 
-COPY . $appdata
+FROM tomcat:8.0
 
-RUN mvn package
-
-
+COPY --from=maven_builder /app/target/*.war /usr/local/tomcat/webapps/
 
