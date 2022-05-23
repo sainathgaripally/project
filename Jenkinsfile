@@ -4,7 +4,7 @@ pipeline {
         registry = 'sainathgaripally/project'
         registryCredential = 'docker-hub'
     }
-    agent any {
+    agent any 
         stages {
             stage('Building Image') {
                 steps {
@@ -39,6 +39,5 @@ pipeline {
                     }
                 }
             }
-        }
     }
 }
