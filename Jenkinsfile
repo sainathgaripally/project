@@ -9,7 +9,7 @@ pipeline {
         stage ('build docker image') {        
                 steps {
                     script {
-                        dockerImage = docker.build registry + ":$BRANCH_NUMBER"
+                        dockerImage = docker.build registry + ":$BUILD_NUMBER"
                     }
                 }
             }
@@ -17,7 +17,7 @@ pipeline {
                 steps {
                     script{
                         docker.withRegistry('', regsistryCredentials)
-                        dockerImage.push("$BRANCH_NUMBER")
+                        dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push('latest')
                     }
                 }
