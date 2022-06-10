@@ -13,8 +13,7 @@ pipeline {
                     }
                 }
             }
-        }
-        stage ('push docker image') {
+            stage ('push docker image') {
                 steps {
                     script{
                         docker.withRegistry('', regsistryCredentials)
@@ -24,3 +23,4 @@ pipeline {
                 }
             }
         }
+}
