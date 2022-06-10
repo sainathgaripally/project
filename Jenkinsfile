@@ -1,43 +1,36 @@
 pipeline {
+    agent { label 'dockernode'}
     environment {
-        docker_image = ''
-        registry = 'sainathgaripally/project'
-        registryCredential = 'docker-hub'
+        registry = 'sainathgaripally/june'
+        regsistryCredentials = 'docker-hub'
+        dockerImage = ''
     }
-    agent any 
-        stages {
-            stage('Building Image') {
+    stages {
+        stage ('build docker image') {
+            when {
+                expression {
+                    BRANCH_NAME == "master"
+                }
                 steps {
-                    echo 'bulding docker image...'
                     script {
-                        docker_image = docker.build registry + ":$BUILD_NUMBER"
+                        dockerImage = docker.build registry + ":$BRANCH_NUMBER"
                     }
                 }
             }
-            stage('Deploy Image') {
+        }
+        stage ('push docker image') {
+            when {
+                expression {
+                    BRANCH_NAME == "master"
+                }
                 steps {
-                    echo 'puhsing docker image'
-                    script {
-                        docker.withRegistry('', registryCredential)                    
-                        dockerImage.push('$BUILD_NUMBER')
+                    script{
+                        docker.withRegistry('', regsistryCredentials)
+                        dockerImage.push("$BRANCH_NUMBER")
                         dockerImage.push('latest')
-                }
-                }
-            }
-            stage('clean up'){
-                steps {
-                    sh "docker rmi $registry:$BUILD_NUMBER"
-                    sh "docker rmi $registry:latest"
-                }
-            }
-            stage('deploy') {
-                steps {
-                    echo 'deploying...'
-                    script {
-                        sh "kubectl apply -f deployment.yml"
-                        sh "kubectl apply -f service.yml"
                     }
                 }
             }
+        }
     }
 }
