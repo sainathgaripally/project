@@ -6,11 +6,7 @@ pipeline {
         dockerImage = ''
     }
     stages {
-        stage ('build docker image') {
-            when {
-                expression {
-                    BRANCH_NAME == "master"
-                }
+        stage ('build docker image') {        
                 steps {
                     script {
                         dockerImage = docker.build registry + ":$BRANCH_NUMBER"
@@ -19,10 +15,6 @@ pipeline {
             }
         }
         stage ('push docker image') {
-            when {
-                expression {
-                    BRANCH_NAME == "master"
-                }
                 steps {
                     script{
                         docker.withRegistry('', regsistryCredentials)
@@ -32,5 +24,3 @@ pipeline {
                 }
             }
         }
-    }
-}
